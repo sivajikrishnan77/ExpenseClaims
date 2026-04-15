@@ -12,7 +12,7 @@ type RootStackParamList = {
 
 export default function MainStack() {
 return(
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Claims" component={ClaimsScreen} />
     </Stack.Navigator>

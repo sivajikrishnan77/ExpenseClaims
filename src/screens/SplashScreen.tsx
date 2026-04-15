@@ -48,7 +48,7 @@ useEffect(() => {
 
         <Image source={require('../assets/logo.png')} style={{ width: 120, height: 120,borderRadius:60,borderColor:'#fff',borderWidth:2,marginBottom:20 }} />
            
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#f3f1f1', marginBottom: 10,paddingTop:10 }}>Expense Manager</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#f3f1f1', marginBottom: 10, }}>Expense Manager</Text>
 
     </View>
   );
