@@ -29,7 +29,7 @@ export default function DropDown({
   const [open, setOpen] = useState(false);
 
   return (
-    <View style={{ marginVertical: 10 }}>
+    <View style={{ marginVertical: 10,zIndex: 1000 }}>
       
       {/* Label */}
       {/* {label && <Text style={{ marginBottom: 5 }}>{label}</Text>} */}
@@ -41,8 +41,12 @@ export default function DropDown({
           alignItems: 'center',
           backgroundColor: '#fff',
           borderRadius: 8,
-          paddingHorizontal: 30,
+          borderWidth: 3,
+          borderColor: '#000000',
+          paddingHorizontal: 20,
           height: 50,
+          width: '90%',
+          alignSelf: 'center',
         }}
       >
         {/* Left Icon */}
@@ -66,6 +70,9 @@ export default function DropDown({
             const val = callback(value);
             setValue(val);
           }}
+
+          listMode="SCROLLVIEW"
+
           style={{
             borderWidth: 0,
             flex: 1,
