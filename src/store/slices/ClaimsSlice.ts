@@ -14,7 +14,7 @@ interface ClaimsState {
   department: string;
   micellaneous: string;
   foodBeverage: string;
-  images: string[]
+  images: string[];
 }
 
 const initialState: ClaimsState = {
@@ -31,40 +31,47 @@ const initialState: ClaimsState = {
   department: "",
   micellaneous: "",
   foodBeverage: "",
-  images: []
+  images: [],
 };
 
 const claimsSlice = createSlice({
   name: "claims",
   initialState,
   reducers: {
+    // ✅ Single reducer handles all string field updates
     updateField: (
       state,
-      action: PayloadAction<{ field: keyof ClaimsState;
-         value: ClaimsState[keyof ClaimsState] }>
+      action: PayloadAction<{
+        field: keyof ClaimsState;
+        value: ClaimsState[keyof ClaimsState];
+      }>
     ) => {
-       const { field, value } = action.payload;
-  (state as any)[field] = value;
+      const { field, value } = action.payload;
+      (state as any)[field] = value;
     },
-    addVoucherDate: (state, action: PayloadAction<string>) => {
-      state.voucherDate.push(action.payload);
-    },
-    removeVoucherDate: (state, action: PayloadAction<string>) => {
-      state.voucherDate = state.voucherDate.filter(date => date !== action.payload);
-    },
-    removeActivityDate: (state, action: PayloadAction<string>) => {
-      state.activityDate = state.activityDate.filter(date => date !== action.payload);
-    },
-    addActivityDate: (state, action: PayloadAction<string>) => {
-      state.activityDate.push(action.payload);
-    },
+
+    
     addImages: (state, action: PayloadAction<string[]>) => {
       state.images.push(...action.payload);
     },
 
-    resetForm: () => initialState
-  }
+    // ✅ Remove image by index
+    removeImage: (state, action: PayloadAction<number>) => {
+      state.images = state.images.filter(
+        (_: string, index: number) => index !== action.payload
+      );
+    },
+
+    // ✅ Reset entire form back to initial state
+    resetForm: () => initialState,
+  },
 });
 
-export const { updateField, addVoucherDate, removeVoucherDate, addActivityDate, removeActivityDate, addImages, resetForm } = claimsSlice.actions;
+export const {
+  updateField,
+  addImages,
+  removeImage,
+  resetForm,
+} = claimsSlice.actions;
+
 export default claimsSlice.reducer;

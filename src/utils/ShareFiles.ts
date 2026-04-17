@@ -6,33 +6,36 @@ export const shareFiles = async (
   includeImages: boolean
 ) => {
   try {
-    // ✅ On Android, Share needs base64 data URIs OR content:// URIs
-    // react-native-share handles this if you pass the file:// path
-    // but we must ensure the path is clean (no double file://)
-    const cleanPath = (uri: string) =>
-      uri.startsWith("file://") ? uri : `file://${uri}`;
+    // ✅ Ensure clean file:// prefix
+    const cleanPath = (uri: string): string => {
+      const stripped = uri.startsWith("file://") 
+        ? uri.slice(7) 
+        : uri;
+      return `file://${stripped}`;
+    };
 
     const pdfUrl = cleanPath(pdfPath);
+    console.log("Sharing PDF:", pdfUrl);
 
     if (includeImages) {
-      // Images embedded in PDF — share PDF only
       await Share.open({
         url: pdfUrl,
         type: "application/pdf",
         title: "Share Expense Claim",
-        failOnCancel: false, // ✅ Prevents error on cancel
+        failOnCancel: false,
       });
     } else {
-      // Share PDF + images separately
       const imageUrls = images.map((img: any) => {
-        const uri = img?.uri || img;
+        const uri: string = img?.uri || img;
         return cleanPath(uri);
       });
+
+      console.log("Sharing URLs:", [pdfUrl, ...imageUrls]);
 
       await Share.open({
         urls: [pdfUrl, ...imageUrls],
         title: "Share Expense Claim",
-        failOnCancel: false, // ✅ Prevents error on cancel
+        failOnCancel: false,
       });
     }
 

@@ -10,7 +10,7 @@ import CalendarInput from '../components/calendar'
 import DropDown from '../components/DropDown'
 import useImagePicker from '../hooks/imagePicker'
 import ClaimPopup from '../components/ClaimPopUp'
-import { generatePDF } from '../utils/pdfGenerator'
+import { generatePDF } from '../utils/GeneratePdf'
 import { shareFiles } from '../utils/ShareFiles'
 
 
@@ -20,7 +20,7 @@ export default function ClaimsScreen() {
 
   const dispatch = useDispatch();
   const form = useSelector((state: any) => state.claims) || {};
-  const { pickImage } = useImagePicker();
+  const { pickImage, deleteImage } = useImagePicker();
   const images = useSelector((state: any) => state.claims.images) || [];
   const [showPopup, setShowPopup] = useState(false);
 const handleClaimProceed = async (includeImages: boolean) => {
@@ -86,7 +86,9 @@ const handleClaimProceed = async (includeImages: boolean) => {
   ]}
   setValue={(value) =>
     dispatch(updateField({ field: "company", value }))
-  } />
+  }
+  placeholder = "Select Company"
+   />
 
 
 
@@ -101,6 +103,7 @@ const handleClaimProceed = async (includeImages: boolean) => {
     setValue={(value) =>
       dispatch(updateField({ field: "businessDivision", value }))
     }
+    placeholder = "Select Business Division"
   />
 
   <Label text="Activity Date" />
@@ -123,6 +126,7 @@ const handleClaimProceed = async (includeImages: boolean) => {
   setValue={(value) =>
     dispatch(updateField({ field: "sites", value }))
   }
+  placeholder="Select Sites"
 />
 
 <Label text="Department" />
@@ -136,6 +140,7 @@ const handleClaimProceed = async (includeImages: boolean) => {
   setValue={(value) =>
     dispatch(updateField({ field: "department", value }))
   }
+  placeholder = "Select Department"
 />
 
 <Label text="Micellaneous" />
@@ -167,14 +172,25 @@ const handleClaimProceed = async (includeImages: boolean) => {
 
 </View>
 
+// Destructure deleteImage from hook
+const { pickImage, deleteImage } = useImagePicker();
+
+// Replace your existing imageContainer View with this:
 <View style={styles.imageContainer}>
   {images.map((img: string, index: number) => (
-    <Image
-      key={index}
-      source={{ uri: img }}
-      style={styles.previewImage}
-    />
-    
+    <View key={index} style={styles.imageWrapper}>
+      <Image
+        source={{ uri: img }}
+        style={styles.previewImage}
+      />
+      {/* ✅ Delete button on top right of image */}
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => deleteImage(index)}
+      >
+        <Text style={styles.deleteText}>✕</Text>
+      </TouchableOpacity>
+    </View>
   ))}
 </View>
 
