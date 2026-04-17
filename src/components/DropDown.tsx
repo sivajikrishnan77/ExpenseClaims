@@ -29,7 +29,7 @@ export default function DropDown({
   const [open, setOpen] = useState(false);
 
   return (
-    <View style={{ marginVertical: 10,zIndex: 1000 }}>
+    <View style={{ marginVertical: 10, zIndex: open ? 1000 : 1 }}>
       
       {/* Label */}
       {/* {label && <Text style={{ marginBottom: 5 }}>{label}</Text>} */}

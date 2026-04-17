@@ -20,7 +20,7 @@ export default function SplashScreen({ navigation }: SplashScreenProps) {
     navigation.replace('Claims'); // or BottomTab
   }, 1200);
   return () => clearTimeout(timer);
-}, []);
+}, [navigation]);
 
 const scale = useRef(new Animated.Value(0)).current;
 

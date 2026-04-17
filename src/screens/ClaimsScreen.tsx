@@ -1,14 +1,17 @@
+/* eslint-disable react-native/no-inline-styles */
 import React ,{useState}from 'react'
 import { Text, TouchableOpacity, View,StyleSheet,Image } from 'react-native'
 import Label from '../components/label'
 import TextInputField from '../components/TextInput'
 import { useDispatch, useSelector } from "react-redux"
-import { updateField,addVoucherDate,removeVoucherDate } from '../store/slices/ClaimsSlice'
+import { updateField } from '../store/slices/ClaimsSlice'
 import { ScrollView } from 'react-native'
 import CalendarInput from '../components/calendar'
 import DropDown from '../components/DropDown'
 import useImagePicker from '../hooks/imagePicker'
 import ClaimPopup from '../components/ClaimPopUp'
+import { generatePDF } from '../utils/pdfGenerator'
+import { shareFiles } from '../utils/ShareFiles'
 
 
 
@@ -20,20 +23,28 @@ export default function ClaimsScreen() {
   const { pickImage } = useImagePicker();
   const images = useSelector((state: any) => state.claims.images) || [];
   const [showPopup, setShowPopup] = useState(false);
-  const handleClaimProceed = (includeImages: boolean) => {
+const handleClaimProceed = async (includeImages: boolean) => {
+  try {
+    setShowPopup(false); // ✅ Close popup immediately for better UX
 
-  setShowPopup(false);
+    console.log("Generating PDF...");
+    const pdfPath = await generatePDF(form, images, includeImages);
 
-  if (includeImages) {
-    console.log("User wants images inside PDF");
-  } else {
-    console.log("User wants images separately");
+    if (!pdfPath) {
+      console.log("PDF generation returned null — aborting share");
+      return;
+    }
+
+    console.log("PDF Path:", pdfPath);
+    await shareFiles(pdfPath, images, includeImages);
+
+  } catch (error) {
+    console.log("Claim process failed:", error);
   }
-
 };
   return (
 
-    <View>
+    <View style={{flex:1}}>
   <ScrollView>
 
       <View style={{ flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#0b63e7' }}>

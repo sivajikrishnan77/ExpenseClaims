@@ -6,10 +6,10 @@ interface ClaimsState {
   requestType: string;
   Brand: string;
   purpose: string;
-  voucherDate: string[];
+  voucherDate: string;
   company: string;
   businessDivision: string;
-  activityDate: string[];
+  activityDate: string;
   sites: string;
   department: string;
   micellaneous: string;
@@ -23,10 +23,10 @@ const initialState: ClaimsState = {
   requestType: "Reimbursement",
   Brand: "",
   purpose: "",
-  voucherDate: [],
+  voucherDate: "",
   company: "",
   businessDivision: "",
-  activityDate: [],
+  activityDate: "",
   sites: "",
   department: "",
   micellaneous: "",

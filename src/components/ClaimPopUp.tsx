@@ -19,125 +19,91 @@ const ClaimPopup: React.FC<Props> = ({ visible, onClose, onProceed }) => {
   const [includeImages, setIncludeImages] = useState(false);
 
   const handleProceed = () => {
+    console.log("Proceed clicked");
     onProceed(includeImages);
-    setIncludeImages(false);
   };
 
   return (
-
     <Modal
       visible={visible}
       transparent
       animationType="fade"
     >
-
-      <View style={styles.modalContainer}>
-
+      <View style={styles.overlay}>
         <View style={styles.popup}>
 
-          <Text style={styles.title}>Generate Claim</Text>
+          <Text style={styles.title}>Generate Claim PDF</Text>
 
-          {/* Checkbox Row */}
-          <View style={styles.checkboxRow}>
-
+          <View style={styles.checkboxContainer}>
             <CheckBox
               value={includeImages}
               onValueChange={setIncludeImages}
             />
-
-            <Text style={styles.checkboxText}>
-              Include Images in PDF
-            </Text>
-
+            <Text>Include Images</Text>
           </View>
 
-
-          {/* Buttons */}
           <View style={styles.buttonRow}>
-
             <TouchableOpacity
-              style={styles.cancelButton}
+              style={styles.cancelBtn}
               onPress={onClose}
             >
-              <Text style={styles.cancelText}>Cancel</Text>
+              <Text style={styles.btnText}>Cancel</Text>
             </TouchableOpacity>
-
 
             <TouchableOpacity
-              style={styles.proceedButton}
+              style={styles.proceedBtn}
               onPress={handleProceed}
             >
-              <Text style={styles.proceedText}>Proceed</Text>
+              <Text style={styles.btnText}>Proceed</Text>
             </TouchableOpacity>
-
           </View>
 
         </View>
-
       </View>
-
     </Modal>
-
   );
 };
-const styles = StyleSheet.create({
-
-modalContainer: {
-flex: 1,
-backgroundColor: "rgba(0,0,0,0.5)",
-justifyContent: "center",
-alignItems: "center"
-},
-
-popup: {
-width: "85%",
-backgroundColor: "#fff",
-padding: 20,
-borderRadius: 10
-},
-
-title: {
-fontSize: 18,
-fontWeight: "600",
-marginBottom: 20
-},
-
-checkboxRow: {
-flexDirection: "row",
-alignItems: "center"
-},
-
-checkboxText: {
-fontSize: 16
-},
-
-buttonRow: {
-flexDirection: "row",
-justifyContent: "space-between",
-marginTop: 25
-},
-
-cancelButton: {
-padding: 10
-},
-
-cancelText: {
-color: "red",
-fontSize: 16
-},
-
-proceedButton: {
-backgroundColor: "#007AFF",
-paddingVertical: 8,
-paddingHorizontal: 20,
-borderRadius: 6
-},
-
-proceedText: {
-color: "#fff",
-fontSize: 16
-}
-
-});
 
 export default ClaimPopup;
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  },
+  popup: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  cancelBtn: {
+    padding: 10,
+    backgroundColor: "#999",
+    borderRadius: 6
+  },
+  proceedBtn: {
+    padding: 10,
+    backgroundColor: "#007bff",
+    borderRadius: 6
+  },
+  btnText: {
+    color: "#fff"
+  }
+});
