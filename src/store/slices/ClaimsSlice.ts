@@ -4,7 +4,7 @@ interface ClaimsState {
   requestedBy: string;
   employeeNo: string;
   requestType: string;
-  Brand: string;
+  Band: string;
   purpose: string;
   voucherDate: string;
   company: string;
@@ -21,7 +21,7 @@ const initialState: ClaimsState = {
   requestedBy: "",
   employeeNo: "",
   requestType: "Reimbursement",
-  Brand: "",
+  Band: "",
   purpose: "",
   voucherDate: "",
   company: "",
@@ -38,7 +38,6 @@ const claimsSlice = createSlice({
   name: "claims",
   initialState,
   reducers: {
-    // ✅ Single reducer handles all string field updates
     updateField: (
       state,
       action: PayloadAction<{
@@ -55,14 +54,11 @@ const claimsSlice = createSlice({
       state.images.push(...action.payload);
     },
 
-    // ✅ Remove image by index
     removeImage: (state, action: PayloadAction<number>) => {
       state.images = state.images.filter(
         (_: string, index: number) => index !== action.payload
       );
     },
-
-    // ✅ Reset entire form back to initial state
     resetForm: () => initialState,
   },
 });

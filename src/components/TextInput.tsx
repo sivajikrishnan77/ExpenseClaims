@@ -7,7 +7,7 @@ export default function TextInputField(props: Props) {
   return (
     <TextInput
       style={styles.input}
-      placeholderTextColor="#f50707"
+      placeholderTextColor="#8d8d8d"
       {...props}
     />
   );
@@ -15,11 +15,10 @@ export default function TextInputField(props: Props) {
 
 const styles = StyleSheet.create({
   input: {
-    borderWidth: 3,
-    borderColor: "#000000",
+    borderWidth: 1,
     borderRadius: 8,
     padding: 12,
-    fontSize: 20,
+    fontSize: 14,
     backgroundColor: "#ffffff",
     width: "90%",
       alignSelf: "center",

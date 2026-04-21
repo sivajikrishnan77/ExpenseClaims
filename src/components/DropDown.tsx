@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
-// import { Text } from 'react-native-paper';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 type Item = {
@@ -13,7 +12,8 @@ type Props = {
   value: string;
   setValue: (val: string) => void;
   list: Item[];
-  label?: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   placeholder?: string;
   icon?: string;
 };
@@ -22,68 +22,145 @@ export default function DropDown({
   value,
   setValue,
   list,
-  // label,
+  open,
+  setOpen,
   placeholder,
   icon,
 }: Props) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <View style={{ marginVertical: 10, zIndex: open ? 1000 : 1 }}>
-      
-      {/* Label */}
-      {/* {label && <Text style={{ marginBottom: 5 }}>{label}</Text>} */}
-
-      {/* Container with icon */}
+    <View
+      style={[
+        styles.wrapper,
+        {
+          zIndex: open ? 1000 : 1,
+        },
+      ]}
+    >
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          borderRadius: 8,
-          borderWidth: 3,
-          borderColor: '#000000',
-          paddingHorizontal: 20,
-          height: 50,
-          width: '90%',
-          alignSelf: 'center',
-        }}
+        style={[
+          styles.container,
+          {
+            borderColor: open ? "#4F46E5" : "#D0D5DD",
+          },
+        ]}
       >
-        {/* Left Icon */}
         {icon && (
           <Ionicons
             name={icon}
             size={20}
-            color="#f00d0d"
-            style={{ marginRight: 8 }}
+            color="#4F46E5"
+            style={styles.icon}
           />
         )}
 
-        {/* Dropdown */}
         <DropDownPicker
           open={open}
           value={value || null}
           items={list}
-          placeholder={placeholder || 'Select an item'}
           setOpen={setOpen}
+
+          placeholder={placeholder || "Select an item"}
+
+          listMode="SCROLLVIEW"
+          dropDownDirection="BOTTOM"
+          maxHeight={180}
+
+          closeAfterSelecting
+
           setValue={(callback) => {
             const val = callback(value);
             setValue(val);
           }}
 
-          listMode="SCROLLVIEW"
+          ArrowDownIconComponent={() => (
+            <Ionicons name="chevron-down" size={20} color="#667085" />
+          )}
 
-          style={{
-            borderWidth: 0,
-            flex: 1,
-            backgroundColor: 'transparent',
+          ArrowUpIconComponent={() => (
+            <Ionicons name="chevron-up" size={20} color="#667085" />
+          )}
+
+          TickIconComponent={() => (
+            <Ionicons name="checkmark" size={18} color="#4F46E5" />
+          )}
+
+          arrowIconContainerStyle={{
+            marginRight: 2,
           }}
-          dropDownContainerStyle={{
-            borderRadius: 8,
-          }}
+
+          style={styles.dropdown}
+          textStyle={styles.dropdownText}
+          placeholderStyle={styles.placeholder}
+
+          dropDownContainerStyle={styles.dropdownContainer}
+
+          listItemContainerStyle={styles.listItemContainer}
+          listItemLabelStyle={styles.listItemLabel}
         />
       </View>
-
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrapper: {
+    marginVertical: 10,
+    marginHorizontal: 15,
+  },
+
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F9FAFB",
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    height: 48,
+    position: "relative",
+  },
+
+  icon: {
+    marginRight: 8,
+  },
+
+  dropdown: {
+    flex: 1,
+    borderWidth: 0,
+    backgroundColor: "transparent",
+    minHeight: 50,
+  },
+
+  dropdownText: {
+    fontSize: 16,
+    color: "#101828",
+  },
+
+  placeholder: {
+    color: "#98A2B3",
+    fontSize: 16,
+  },
+
+  dropdownContainer: {
+    position: "absolute",
+    top: 55,
+    right: 0,
+    width: 170,
+
+    borderWidth: 1,
+    borderColor: "#D0D5DD",
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+
+    elevation: 6,
+  },
+
+  listItemContainer: {
+    height: 44,
+    justifyContent: "center",
+  },
+
+  listItemLabel: {
+    fontSize: 14,
+    color: "#344054",
+  },
+});

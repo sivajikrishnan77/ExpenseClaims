@@ -26,13 +26,14 @@ export default function DatePickerField({ value, onChange }: Props) {
         <TextInput
           style={styles.input}
           placeholder="YYYY-MM-DD"
+          placeholderTextColor="#cccccc"
           value={value}
           onChangeText={onChange}
         />
 
         {/* Calendar Icon */}
         <TouchableOpacity onPress={() => setShow(true)}>
-          <Ionicons name="calendar-outline" size={22} color="#555" />
+          <Ionicons name="calendar-outline" size={22} color="#ca1d1d" />
         </TouchableOpacity>
 
       </View>
@@ -68,10 +69,10 @@ const styles = StyleSheet.create({
   inputContainer: {
    flexDirection: "row",
     alignItems: "center",
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: "#000000",
     borderRadius: 8,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#ffffff",
     paddingHorizontal: 12
   },
 
@@ -79,5 +80,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     fontSize: 16,
+    color: "#000000"
   },
 });

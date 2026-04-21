@@ -6,7 +6,6 @@ export const generatePDF = async (
   images: any[],
   includeImages: boolean
 ): Promise<string | null> => {
-
   try {
 
     const pdfDoc = await PDFDocument.create();
@@ -52,7 +51,7 @@ export const generatePDF = async (
       // LEFT CELL
       page.drawRectangle({
         x: 50,
-        y: y - 10,
+        y: y - cellHeight,
         width: 250,
         height: cellHeight,
         borderWidth: 1,
@@ -62,26 +61,24 @@ export const generatePDF = async (
       // RIGHT CELL
       page.drawRectangle({
         x: 300,
-        y: y - 10,
+        y: y - cellHeight, 
         width: 245,
         height: cellHeight,
         borderWidth: 1,
         borderColor: rgb(0, 0, 0)
       });
 
-      // LEFT LABEL
       page.drawText(label1, {
         x: 60,
-        y,
+        y: y - 16, 
         size: 10,
         font,
         color: rgb(0.4,0.4,0.4)
       });
 
-      // LEFT VALUE
       page.drawText(String(value1 || "-"), {
-        x: 170,
-        y,
+        x: 130,
+        y: y - 16, 
         size: 11,
         font
       });
@@ -90,15 +87,15 @@ export const generatePDF = async (
 
         page.drawText(label2, {
           x: 310,
-          y,
+          y: y - 16,
           size: 10,
           font,
           color: rgb(0.4,0.4,0.4)
         });
 
         page.drawText(String(value2 || "-"), {
-          x: 430,
-          y,
+          x: 390,
+          y: y - 16,
           size: 11,
           font
         });
@@ -110,67 +107,72 @@ export const generatePDF = async (
 
     // FORM SECTION
     drawRow("Requested By", formData.requestedBy, "Employee No", formData.employeeNo);
-    drawRow("Request Type", formData.requestType, "Brand", formData.brand);
+    drawRow("Request Type", formData.requestType, "Brand", formData.Brand);
     drawRow("Company", formData.company, "Business Division", formData.businessDivision);
     drawRow("Department", formData.department, "Sites", formData.sites);
     drawRow("Voucher Date", formData.voucherDate, "Activity Date", formData.activityDate);
 
-    y -= 10;
-
-    // PURPOSE HEADER ROW
-const purposeLabelHeight = 24;
+    // PURPOSE HEADER
+    const purposeHeight = 24;
 
 page.drawRectangle({
   x: 50,
-  y: y - purposeLabelHeight,
+  y: y - purposeHeight,
   width: 495,
-  height: purposeLabelHeight,
+  height: purposeHeight,
   borderWidth: 1,
   borderColor: rgb(0,0,0),
 });
 
 page.drawText("Purpose", {
   x: 60,
-  y: y - 17,
+  y: y - 16,
   size: 11,
   font,
-});
-
-y -= purposeLabelHeight;
-
-// PURPOSE TEXT AREA
-const purposeBoxHeight = 55;
-
-page.drawRectangle({
-  x: 50,
-  y: y - purposeBoxHeight,
-  width: 495,
-  height: purposeBoxHeight,
-  borderWidth: 1,
-  borderColor: rgb(0,0,0),
 });
 
 page.drawText(String(formData.purpose || "-"), {
-  x: 60,
-  y: y - 25,
+  x: 150,
+  y: y - 16,
   size: 11,
   font,
 });
 
-y -= purposeBoxHeight + 10;
+y -= purposeHeight;
 
-    // EXPENSE HEADER
-    page.drawText("Expense Details", {
-      x: 50,
-      y,
-      size: 14,
-      font,
-    });
 
-    y -= 20;
+    const expenseHeight = 24;
 
-    drawRow("Food & Beverage", formData.foodBeverage);
-    drawRow("Miscellaneous", formData.miscellaneous);
+    const drawExpense = (label: string, value: any) => {
+
+      page.drawRectangle({
+        x: 50,
+        y: y - expenseHeight,
+        width: 495,
+        height: expenseHeight,
+        borderWidth: 1,
+        borderColor: rgb(0,0,0),
+      });
+
+      page.drawText(label, {
+        x: 60,
+        y: y - 16,
+        size: 11,
+        font,
+      });
+
+      page.drawText(String(value || "-"), {
+        x: 200,
+        y: y - 16,
+        size: 11,
+        font,
+      });
+
+      y -= expenseHeight;
+    };
+
+    drawExpense("Food & Beverage", formData.foodBeverage);
+    drawExpense("Miscellaneous(Remarks)", formData.micellaneous);
 
     // IMAGE SECTION
     if (includeImages && images?.length > 0) {
@@ -188,8 +190,7 @@ y -= purposeBoxHeight + 10;
 
       let x = 50;
 
-      const imgWidth = 150;
-      const imgHeight = 120;
+      const maxWidth = 180;
 
       for (const img of images) {
 
@@ -198,12 +199,18 @@ y -= purposeBoxHeight + 10;
 
         const base64 = await RNFS.readFile(cleanUri, "base64");
 
-        const imageBytes = Uint8Array.from(
-          atob(base64),
-          (c) => c.charCodeAt(0)
-        );
+        const image = await pdfDoc.embedJpg(base64);
 
-        const jpg = await pdfDoc.embedJpg(imageBytes);
+        const dims = image.scale(1);
+
+        let imgWidth = dims.width;
+        let imgHeight = dims.height;
+
+        if (imgWidth > maxWidth) {
+          const scale = maxWidth / imgWidth;
+          imgWidth *= scale;
+          imgHeight *= scale;
+        }
 
         if (y < 150) {
           page = pdfDoc.addPage([595, 842]);
@@ -211,7 +218,7 @@ y -= purposeBoxHeight + 10;
           x = 50;
         }
 
-        page.drawImage(jpg, {
+        page.drawImage(image, {
           x,
           y: y - imgHeight,
           width: imgWidth,
@@ -220,7 +227,7 @@ y -= purposeBoxHeight + 10;
 
         x += imgWidth + 20;
 
-        if (x > 400) {
+        if (x > 420) {
           x = 50;
           y -= imgHeight + 20;
         }
